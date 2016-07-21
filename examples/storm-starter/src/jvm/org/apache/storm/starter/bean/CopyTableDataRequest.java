@@ -1,11 +1,19 @@
 package org.apache.storm.starter.bean;
 
+import org.bson.types.ObjectId;
+import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Id;
+
 import java.io.Serializable;
 
 /**
  * Created by zonghan on 7/20/16.
  */
-public class CopyTableDataRequest implements Serializable{
+@Entity
+public class CopyTableDataRequest implements Serializable, Cloneable {
+
+    @Id
+    private ObjectId id = null;
 
     private String connectionUrl;
 
@@ -16,6 +24,8 @@ public class CopyTableDataRequest implements Serializable{
     private String schema;
 
     private String table;
+
+    private RequestStatusEnum status = RequestStatusEnum.CREATED;
 
     public CopyTableDataRequest(){
 
@@ -65,8 +75,32 @@ public class CopyTableDataRequest implements Serializable{
         this.schema = schema;
     }
 
-    public void setTable(String table) {
+    public CopyTableDataRequest setTable(String table) {
         this.table = table;
+        return this;
+    }
+
+    public RequestStatusEnum getStatus() {
+        return status;
+    }
+
+    public CopyTableDataRequest setStatus(RequestStatusEnum status) {
+        this.status = status;
+        return this;
+    }
+
+    public ObjectId getId() {
+        return id;
+    }
+
+    public void setId(ObjectId id) {
+        this.id = id;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return new CopyTableDataRequest(
+                this.connectionUrl, this.username, this.password, this.schema, this.table);
     }
 
     @Override

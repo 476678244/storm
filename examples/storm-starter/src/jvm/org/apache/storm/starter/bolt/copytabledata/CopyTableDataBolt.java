@@ -2,6 +2,9 @@ package org.apache.storm.starter.bolt.copytabledata;
 
 import org.apache.log4j.Logger;
 import org.apache.storm.starter.bean.CopyTableDataRequest;
+import org.apache.storm.starter.bean.RequestStatusEnum;
+import org.apache.storm.starter.mongodb.CopyDataRequestDAO;
+import org.apache.storm.starter.mongodb.MorphiaSingleton;
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.BasicOutputCollector;
@@ -22,22 +25,26 @@ public class CopyTableDataBolt extends BaseRichBolt {
 
     private OutputCollector collector;
 
+    private CopyDataRequestDAO dao = null;
+
     @Override
     public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
         this.collector = collector;
-
+        this.dao = MorphiaSingleton.getCopyDataRequestDAO();
     }
 
     @Override
     public void execute(Tuple input) {
         CopyTableDataRequest request = (CopyTableDataRequest) input.getValue(0);
         LOG.info("CopyTableDataBolt get request:" + request);
+        this.dao.save(request.setStatus(RequestStatusEnum.PROGRESSING));
+        LOG.info("CopyTableDataBolt PROGRESSING");
         this.collector.emit(new Values(request));
         LOG.info("CopyTableDataBolt emit request:" + request);
     }
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        declarer.declare(new Fields("cr"));
+        declarer.declare(new Fields("request"));
     }
 }

@@ -170,6 +170,13 @@
       <artifactId>storm-redis</artifactId>
       <version>${project.version}</version>
     </dependency>
+      <!-- https://mvnrepository.com/artifact/org.mongodb.morphia/morphia -->
+      <dependency>
+          <groupId>org.mongodb.morphia</groupId>
+          <artifactId>morphia</artifactId>
+          <version>1.2.1</version>
+      </dependency>
+
   </dependencies>
 
   <build>
