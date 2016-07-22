@@ -28,14 +28,11 @@ public class CopyTableDataTopology {
         ds.delete(ds.createQuery(CopyTableDataRequest.class));
         List<CopyTableDataRequest> requests = new ArrayList<>();
         CopyTableDataRequest request = new CopyTableDataRequest(
-           "jdbc:1521:dbpool1", "sfuser", "sfuser", "sfuser_real", "form_content").setTargetConnectionUrl(
-                   "jdbc:1521:dbpool1").setTargetSchema("sfuser").setTargetPassword(
-                           "sfuser").setTargetSchema("sfuser_temp");
+           "jdbc:oracle:thin:@10.58.100.66:1521:dbpool1", "sfuser", "sfuser", "sfuser_tree", "rbp_perm_role").setTargetConnectionUrl(
+                   "jdbc:oracle:thin:@10.58.100.66:1521:dbpool1").setTargetSchema("sfuser").setTargetPassword(
+                           "sfuser").setTargetSchema("sfuser_temp2").setTargetUsername("sfuser");
         requests.add(request);
-        requests.add(((CopyTableDataRequest) request.clone()).setTable("rbp_perm_role"));
         requests.add(((CopyTableDataRequest) request.clone()).setTable("rbp_perm_rule"));
-        requests.add(((CopyTableDataRequest) request.clone()).setTable("permission"));
-        requests.add(((CopyTableDataRequest) request.clone()).setTable("users_group"));
         requests.stream().forEach(r -> {
             ds.save(r);
         });
@@ -44,7 +41,7 @@ public class CopyTableDataTopology {
         TopologyBuilder builder = new TopologyBuilder();
 
         builder.setSpout("hear_request", new RequestListenSpout(), 1);
-        builder.setBolt("process", new CopyTableDataBolt(), 5).shuffleGrouping("hear_request");
+        builder.setBolt("process", new CopyTableDataBolt(), 1).shuffleGrouping("hear_request");
         builder.setBolt("finish", new FinishRequestBolt(), 1).shuffleGrouping("process");
 
         Config conf = new Config();

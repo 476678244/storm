@@ -5,6 +5,8 @@ import org.apache.storm.starter.bean.CopyTableDataRequest;
 import org.apache.storm.starter.bean.RequestStatusEnum;
 import org.apache.storm.starter.mongodb.CopyDataRequestDAO;
 import org.apache.storm.starter.mongodb.MorphiaSingleton;
+import org.apache.storm.starter.service.ConnectionInfo;
+import org.apache.storm.starter.service.TableUtil;
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.BasicOutputCollector;
@@ -14,6 +16,8 @@ import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Tuple;
 import org.apache.storm.tuple.Values;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Map;
 
 /**
@@ -37,9 +41,22 @@ public class CopyTableDataBolt extends BaseRichBolt {
     public void execute(Tuple input) {
         LOG.error("*****Thread" + Thread.currentThread().getName());
         CopyTableDataRequest request = (CopyTableDataRequest) input.getValue(0);
+        ConnectionInfo sourceConnectionInfo = new ConnectionInfo(request.getUsername(), request.getPassword(), request.getConnectionUrl());
+        ConnectionInfo targetConnectionInfo = new ConnectionInfo(request.getTargetUsername(), request.getTargetPassword(), request.getTargetConnectionUrl());
+        String sourceSchema = request.getSchema();
+        String targetSchema = request.getTargetSchema();
+        String table = request.getTable();
         LOG.info("CopyTableDataBolt get request:" + request);
         this.dao.save(request.setStatus(RequestStatusEnum.PROGRESSING));
         LOG.info("CopyTableDataBolt PROGRESSING");
+        try {
+            TableUtil.migrateTableData(table, sourceSchema, sourceConnectionInfo, targetSchema, targetConnectionInfo);
+        } catch (SQLException e) {
+            LOG.error(e);
+        } catch (InterruptedException e) {
+            LOG.error(e);
+        }
+        //
         this.collector.emit(new Values(request));
         LOG.info("CopyTableDataBolt emit request:" + request);
     }
