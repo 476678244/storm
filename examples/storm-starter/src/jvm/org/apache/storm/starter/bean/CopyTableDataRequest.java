@@ -25,9 +25,17 @@ public class CopyTableDataRequest implements Serializable, Cloneable {
 
     private String table;
 
+    private String targetConnectionUrl;
+
+    private String targetUsername;
+
+    private String targetPassword;
+
+    private String targetSchema;
+
     private RequestStatusEnum status = RequestStatusEnum.CREATED;
 
-    public CopyTableDataRequest(){
+    public CopyTableDataRequest() {
 
     }
 
@@ -100,7 +108,9 @@ public class CopyTableDataRequest implements Serializable, Cloneable {
     @Override
     public Object clone() throws CloneNotSupportedException {
         return new CopyTableDataRequest(
-                this.connectionUrl, this.username, this.password, this.schema, this.table);
+                this.connectionUrl, this.username, this.password, this.schema, this.table).setTargetConnectionUrl(
+                        this.targetConnectionUrl).setTargetUsername(this.targetUsername).setTargetPassword(
+                                this.targetPassword).setTargetSchema(this.targetSchema);
     }
 
     @Override
@@ -112,5 +122,41 @@ public class CopyTableDataRequest implements Serializable, Cloneable {
                 ", schema='" + schema + '\'' +
                 ", table='" + table + '\'' +
                 '}';
+    }
+
+    public String getTargetConnectionUrl() {
+        return targetConnectionUrl;
+    }
+
+    public String getTargetUsername() {
+        return targetUsername;
+    }
+
+    public String getTargetPassword() {
+        return targetPassword;
+    }
+
+    public String getTargetSchema() {
+        return targetSchema;
+    }
+
+    public CopyTableDataRequest setTargetConnectionUrl(String targetConnectionUrl) {
+        this.targetConnectionUrl = targetConnectionUrl;
+        return this;
+    }
+
+    public CopyTableDataRequest setTargetUsername(String targetUsername) {
+        this.targetUsername = targetUsername;
+        return this;
+    }
+
+    public CopyTableDataRequest setTargetPassword(String targetPassword) {
+        this.targetPassword = targetPassword;
+        return this;
+    }
+
+    public CopyTableDataRequest setTargetSchema(String targetSchema) {
+        this.targetSchema = targetSchema;
+        return this;
     }
 }

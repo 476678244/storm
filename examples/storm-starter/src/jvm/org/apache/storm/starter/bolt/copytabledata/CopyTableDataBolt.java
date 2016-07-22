@@ -35,6 +35,7 @@ public class CopyTableDataBolt extends BaseRichBolt {
 
     @Override
     public void execute(Tuple input) {
+        LOG.error("*****Thread" + Thread.currentThread().getName());
         CopyTableDataRequest request = (CopyTableDataRequest) input.getValue(0);
         LOG.info("CopyTableDataBolt get request:" + request);
         this.dao.save(request.setStatus(RequestStatusEnum.PROGRESSING));

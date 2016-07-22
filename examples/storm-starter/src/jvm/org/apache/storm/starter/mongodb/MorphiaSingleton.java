@@ -1,6 +1,7 @@
 package org.apache.storm.starter.mongodb;
 
 import com.mongodb.MongoClient;
+import org.apache.log4j.Logger;
 import org.apache.storm.starter.bean.CopyTableDataRequest;
 import org.mongodb.morphia.Datastore;
 import org.mongodb.morphia.Morphia;
@@ -12,6 +13,8 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class MorphiaSingleton {
 
+    private static final Logger LOG = Logger.getLogger(MorphiaSingleton.class);
+
     private static Datastore ds = null;
 
     private static ReentrantLock dsLock = new ReentrantLock();
@@ -20,7 +23,7 @@ public class MorphiaSingleton {
 
     private static ReentrantLock daoLock = new ReentrantLock();
 
-    private MorphiaSingleton(){
+    private MorphiaSingleton() {
 
     }
 
@@ -31,6 +34,7 @@ public class MorphiaSingleton {
     public static Datastore getDatastore() {
         dsLock.lock();
         if (ds == null) {
+            LOG.error("*****new ds");
             ds = new Morphia().map(CopyTableDataRequest.class).createDatastore(
                     new MongoClient(HOSTNAME, PORT), "copydatarequest");
         }
