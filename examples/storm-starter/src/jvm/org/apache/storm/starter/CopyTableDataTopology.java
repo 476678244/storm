@@ -25,26 +25,26 @@ public class CopyTableDataTopology {
     public static void main(String[] args) throws Exception {
         // test data
         Datastore ds = MorphiaSingleton.getDatastore();
-        ds.delete(ds.createQuery(CopyTableDataRequest.class));
+//        ds.delete(ds.createQuery(CopyTableDataRequest.class));
         List<CopyTableDataRequest> requests = new ArrayList<>();
-        CopyTableDataRequest request = new CopyTableDataRequest(
-                "jdbc:oracle:thin:@10.58.100.66:1521:dbpool1", "sfuser", "sfuser", "sfuser_tree", "rbp_perm_role")
-                .setTargetConnectionUrl("jdbc:oracle:thin:@10.58.100.66:1521:dbpool1").setTargetSchema("sfuser")
-                .setTargetPassword("sfuser").setTargetSchema("sfuser_temp2").setTargetUsername("sfuser")
-                .setIdColumnName("role_id").setStartId(1).setEndId(500);
-        requests.add(request);
-        requests.add(((CopyTableDataRequest) request.clone()).setStartId(501).setEndId(1000));
-        requests.add(((CopyTableDataRequest) request.clone()).setTable("rbp_perm_rule")
-                .setIdColumnName("rule_id").setStartId(1).setEndId(500));
-        requests.stream().forEach(r -> {
-            ds.save(r);
-        });
+//        CopyTableDataRequest request = new CopyTableDataRequest(
+//                "jdbc:oracle:thin:@10.58.100.66:1521:dbpool1", "sfuser", "sfuser", "sfuser_tree", "rbp_perm_role")
+//                .setTargetConnectionUrl("jdbc:oracle:thin:@10.58.100.66:1521:dbpool1").setTargetSchema("sfuser")
+//                .setTargetPassword("sfuser").setTargetSchema("sfuser_temp2").setTargetUsername("sfuser")
+//                .setIdColumnName("role_id").setStartId(1).setEndId(500);
+//        requests.add(request);
+//        requests.add(((CopyTableDataRequest) request.clone()).setStartId(501).setEndId(1000));
+//        requests.add(((CopyTableDataRequest) request.clone()).setTable("rbp_perm_rule")
+//                .setIdColumnName("rule_id").setStartId(1).setEndId(500));
+//        requests.stream().forEach(r -> {
+//            ds.save(r);
+//        });
 
         // builder
         TopologyBuilder builder = new TopologyBuilder();
 
         builder.setSpout("hear_request", new RequestListenSpout(), 1);
-        builder.setBolt("process", new CopyTableDataBolt(), 1).shuffleGrouping("hear_request");
+        builder.setBolt("process", new CopyTableDataBolt(), 10).shuffleGrouping("hear_request");
         builder.setBolt("finish", new FinishRequestBolt(), 1).shuffleGrouping("process");
 
         Config conf = new Config();
@@ -57,7 +57,7 @@ public class CopyTableDataTopology {
         } else {
             LocalCluster cluster = new LocalCluster();
             cluster.submitTopology("CopyTableDataTopology", conf, builder.createTopology());
-            //Utils.sleep(20000);
+            requests = ds.find(CopyTableDataRequest.class).asList();
             while (!requests.isEmpty()) {
                 requests = ds.find(CopyTableDataRequest.class).asList();
                 Utils.sleep(100);

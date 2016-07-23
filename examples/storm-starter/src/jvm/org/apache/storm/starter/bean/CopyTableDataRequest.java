@@ -9,7 +9,7 @@ import java.io.Serializable;
 /**
  * Created by zonghan on 7/20/16.
  */
-@Entity
+@Entity(noClassnameStored = true)
 public class CopyTableDataRequest implements Serializable, Cloneable {
 
     @Id
@@ -117,8 +117,8 @@ public class CopyTableDataRequest implements Serializable, Cloneable {
     public Object clone() throws CloneNotSupportedException {
         return new CopyTableDataRequest(
                 this.connectionUrl, this.username, this.password, this.schema, this.table).setTargetConnectionUrl(
-                        this.targetConnectionUrl).setTargetUsername(this.targetUsername).setTargetPassword(
-                                this.targetPassword).setTargetSchema(this.targetSchema);
+                this.targetConnectionUrl).setTargetUsername(this.targetUsername).setTargetPassword(
+                this.targetPassword).setTargetSchema(this.targetSchema);
     }
 
     @Override

@@ -10,6 +10,7 @@ import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseRichSpout;
 import org.apache.storm.tuple.Fields;
 import org.apache.storm.tuple.Values;
+import org.apache.storm.utils.Utils;
 import org.mongodb.morphia.Datastore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,14 +39,13 @@ public class RequestListenSpout extends BaseRichSpout {
 
     @Override
     public void nextTuple() {
-        LOG.info("trying hear request:");
         List<CopyTableDataRequest> requests = this.dao.find(this.dao.createQuery().filter("status", RequestStatusEnum.CREATED)).asList();
         requests.stream().forEach(request-> {
             request.setStatus(RequestStatusEnum.FOUND);
             this.dao.save(request);
             this.collector.emit(new Values(request));
         });
-        LOG.info("hear request one round complete:");
+        Utils.sleep(5000);
 //        try {
 //            Thread.sleep(2000);
 //        } catch (InterruptedException e) {

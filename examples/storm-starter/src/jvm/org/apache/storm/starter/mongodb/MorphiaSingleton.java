@@ -27,7 +27,8 @@ public class MorphiaSingleton {
 
     }
 
-    private static final String HOSTNAME = "10.59.178.29";
+//    private static final String HOSTNAME = "10.59.178.29";
+    private static final String HOSTNAME = "127.0.0.1";
 
     private static final int PORT = 27017;
 
