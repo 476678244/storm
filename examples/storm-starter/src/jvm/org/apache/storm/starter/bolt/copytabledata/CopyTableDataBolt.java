@@ -46,11 +46,15 @@ public class CopyTableDataBolt extends BaseRichBolt {
         String sourceSchema = request.getSchema();
         String targetSchema = request.getTargetSchema();
         String table = request.getTable();
+        String idColumnName = request.getIdColumnName();
+        long startId = request.getStartId();
+        long endId = request.getEndId();
         LOG.info("CopyTableDataBolt get request:" + request);
         this.dao.save(request.setStatus(RequestStatusEnum.PROGRESSING));
         LOG.info("CopyTableDataBolt PROGRESSING");
         try {
-            TableUtil.migrateTableData(table, sourceSchema, sourceConnectionInfo, targetSchema, targetConnectionInfo);
+            TableUtil.migrateTableData(table, sourceSchema, sourceConnectionInfo, targetSchema, targetConnectionInfo,
+                    idColumnName, startId, endId);
         } catch (SQLException e) {
             LOG.error(e);
         } catch (InterruptedException e) {

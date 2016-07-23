@@ -35,6 +35,14 @@ public class CopyTableDataRequest implements Serializable, Cloneable {
 
     private RequestStatusEnum status = RequestStatusEnum.CREATED;
 
+    private String idColumnName;
+
+    private long migrationJobId;
+
+    private long startId;
+
+    private long endId;
+
     public CopyTableDataRequest() {
 
     }
@@ -157,6 +165,42 @@ public class CopyTableDataRequest implements Serializable, Cloneable {
 
     public CopyTableDataRequest setTargetSchema(String targetSchema) {
         this.targetSchema = targetSchema;
+        return this;
+    }
+
+    public String getIdColumnName() {
+        return idColumnName;
+    }
+
+    public long getMigrationJobId() {
+        return migrationJobId;
+    }
+
+    public long getStartId() {
+        return startId;
+    }
+
+    public long getEndId() {
+        return endId;
+    }
+
+    public CopyTableDataRequest setIdColumnName(String idColumnName) {
+        this.idColumnName = idColumnName;
+        return this;
+    }
+
+    public CopyTableDataRequest setMigrationJobId(long migrationJobId) {
+        this.migrationJobId = migrationJobId;
+        return this;
+    }
+
+    public CopyTableDataRequest setStartId(long startId) {
+        this.startId = startId;
+        return this;
+    }
+
+    public CopyTableDataRequest setEndId(long endId) {
+        this.endId = endId;
         return this;
     }
 }

@@ -28,11 +28,14 @@ public class CopyTableDataTopology {
         ds.delete(ds.createQuery(CopyTableDataRequest.class));
         List<CopyTableDataRequest> requests = new ArrayList<>();
         CopyTableDataRequest request = new CopyTableDataRequest(
-           "jdbc:oracle:thin:@10.58.100.66:1521:dbpool1", "sfuser", "sfuser", "sfuser_tree", "rbp_perm_role").setTargetConnectionUrl(
-                   "jdbc:oracle:thin:@10.58.100.66:1521:dbpool1").setTargetSchema("sfuser").setTargetPassword(
-                           "sfuser").setTargetSchema("sfuser_temp2").setTargetUsername("sfuser");
+                "jdbc:oracle:thin:@10.58.100.66:1521:dbpool1", "sfuser", "sfuser", "sfuser_tree", "rbp_perm_role")
+                .setTargetConnectionUrl("jdbc:oracle:thin:@10.58.100.66:1521:dbpool1").setTargetSchema("sfuser")
+                .setTargetPassword("sfuser").setTargetSchema("sfuser_temp2").setTargetUsername("sfuser")
+                .setIdColumnName("role_id").setStartId(1).setEndId(500);
         requests.add(request);
-        requests.add(((CopyTableDataRequest) request.clone()).setTable("rbp_perm_rule"));
+        requests.add(((CopyTableDataRequest) request.clone()).setStartId(501).setEndId(1000));
+        requests.add(((CopyTableDataRequest) request.clone()).setTable("rbp_perm_rule")
+                .setIdColumnName("rule_id").setStartId(1).setEndId(500));
         requests.stream().forEach(r -> {
             ds.save(r);
         });

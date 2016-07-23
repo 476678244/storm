@@ -34,11 +34,13 @@ public class TableUtil {
     }
 
     public static void migrateTableData(String tableName, String sourceSchema, ConnectionInfo sourceConnInfo,
-                                        String targetSchema, ConnectionInfo targetConnInfo)
+                                        String targetSchema, ConnectionInfo targetConnInfo, String idColumnName,
+                                        long startId, long endId)
             throws SQLException, InterruptedException {
         int rows = 0;
         int batchSize = 300;
-        String queryString = "SELECT * FROM " + sourceSchema + "." + tableName + "";
+        String queryString = "SELECT * FROM " + sourceSchema + "." + tableName +
+                " where " + idColumnName + " >= " + startId + " and " + idColumnName + " <= " + endId;
         PreparedStatement pstmt = null;
         PreparedStatement prepStmnt = null;
         ResultSet queryResult = null;
@@ -207,4 +209,5 @@ public class TableUtil {
             sourceConn.close();
         }
     }
+
 }
