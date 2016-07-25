@@ -40,21 +40,20 @@ public class RequestListenSpout extends BaseRichSpout {
     @Override
     public void nextTuple() {
         LOG.info("RequestListenSpout nextTuple()");
-        List<CopyTableDataRequest> requests = this.dao.find(this.dao.createQuery().filter("status", RequestStatusEnum.CREATED)).asList();
-        requests.stream().forEach(request-> {
+//        List<CopyTableDataRequest> requests = this.dao.find(this.dao.createQuery().filter("status", RequestStatusEnum.CREATED)).asList();
+//        requests.stream().forEach(request-> {
+//            request.setStatus(RequestStatusEnum.FOUND);
+//            this.dao.save(request);
+//            this.collector.emit(new Values(request));
+//        });
+        Utils.sleep(50);
+        CopyTableDataRequest request = this.dao.findOne(this.dao.createQuery().filter("status", RequestStatusEnum.CREATED));
+        if (request != null) {
             request.setStatus(RequestStatusEnum.FOUND);
             this.dao.save(request);
             this.collector.emit(new Values(request));
-        });
-        Utils.sleep(5000);
-//        try {
-//            Thread.sleep(2000);
-//        } catch (InterruptedException e) {
-//        }
-//        CopyTableDataRequest request = new CopyTableDataRequest(
-//                "jdbc:1521:dbpool1", "sfuser", "sfuser", "sfuser_real", "form_content");
-//        LOG.info("hear request:" + request);
-//        this.collector.emit(new Values(request));
+        }
+        //Utils.sleep(5000);
     }
 
     @Override
