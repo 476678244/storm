@@ -39,6 +39,7 @@ public class RequestListenSpout extends BaseRichSpout {
 
     @Override
     public void nextTuple() {
+        LOG.info("RequestListenSpout nextTuple()");
         List<CopyTableDataRequest> requests = this.dao.find(this.dao.createQuery().filter("status", RequestStatusEnum.CREATED)).asList();
         requests.stream().forEach(request-> {
             request.setStatus(RequestStatusEnum.FOUND);
