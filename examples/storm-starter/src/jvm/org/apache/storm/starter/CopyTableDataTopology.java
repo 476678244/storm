@@ -44,7 +44,7 @@ public class CopyTableDataTopology {
         TopologyBuilder builder = new TopologyBuilder();
 
         builder.setSpout("hear_request", new RequestListenSpout(), 1);
-        builder.setBolt("process", new CopyTableDataBolt(), 10).shuffleGrouping("hear_request");
+        builder.setBolt("process", new CopyTableDataBolt(), 4).shuffleGrouping("hear_request");
         builder.setBolt("finish", new FinishRequestBolt(), 1).shuffleGrouping("process");
 
         Config conf = new Config();
@@ -57,6 +57,7 @@ public class CopyTableDataTopology {
         } else {
             LocalCluster cluster = new LocalCluster();
             cluster.submitTopology("CopyTableDataTopology", conf, builder.createTopology());
+            Utils.sleep(1000 * 60 * 60);
             requests = ds.find(CopyTableDataRequest.class).asList();
             while (!requests.isEmpty()) {
                 requests = ds.find(CopyTableDataRequest.class).asList();

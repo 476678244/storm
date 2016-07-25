@@ -1,8 +1,10 @@
 package org.apache.storm.starter.service;
 
 import org.apache.log4j.Logger;
+import org.apache.storm.starter.connectionpool.DataSourceFactory;
 import org.apache.storm.starter.mongodb.MorphiaSingleton;
 
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.*;
@@ -17,15 +19,14 @@ public class TableUtil {
     private static final Logger log = Logger.getLogger(TableUtil.class);
 
     private static Connection getConnection(ConnectionInfo connectionInfo) {
+//        try {
+//            Class.forName("oracle.jdbc.driver.OracleDriver");
+//        } catch (ClassNotFoundException ex) {
+//            log.error("Error: unable to load driver class!");
+//        }
         try {
-            Class.forName("oracle.jdbc.driver.OracleDriver");
-        } catch (ClassNotFoundException ex) {
-            log.error("Error: unable to load driver class!");
-        }
-        try {
-            Connection con = DriverManager.getConnection
-                    (connectionInfo.getUrl(), connectionInfo.getUsername(),
-                            connectionInfo.getPassword());
+            DataSource dataSource = DataSourceFactory.getDataSource(connectionInfo);
+            Connection con = dataSource.getConnection();
             return con;
         } catch (SQLException e) {
             log.error(e);
