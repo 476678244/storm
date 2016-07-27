@@ -44,7 +44,7 @@ public class CopyTableDataTopology {
         TopologyBuilder builder = new TopologyBuilder();
 
         builder.setSpout("hear_request", new RequestListenSpout(), 1);
-        builder.setBolt("process", new CopyTableDataBolt(),10).shuffleGrouping("hear_request");
+        builder.setBolt("process", new CopyTableDataBolt(),RequestListenSpout.PARALLELISM).shuffleGrouping("hear_request");
         builder.setBolt("finish", new FinishRequestBolt(), 1).shuffleGrouping("process");
 
         Config conf = new Config();
