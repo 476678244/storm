@@ -177,7 +177,7 @@ public class TableUtil {
                 }
                 rows++;
                 prepStmnt.addBatch();
-                log.info(targetSchema + "add batch:" + insertString);
+                log.debug(targetSchema + "add batch:" + insertString);
 
                 if (batchSize > 0) {
                     try {

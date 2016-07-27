@@ -44,14 +44,14 @@ public class CopyTableDataTopology {
         TopologyBuilder builder = new TopologyBuilder();
 
         builder.setSpout("hear_request", new RequestListenSpout(), 1);
-        builder.setBolt("process", new CopyTableDataBolt(), 6).shuffleGrouping("hear_request");
+        builder.setBolt("process", new CopyTableDataBolt(),10).shuffleGrouping("hear_request");
         builder.setBolt("finish", new FinishRequestBolt(), 1).shuffleGrouping("process");
 
         Config conf = new Config();
         conf.setDebug(false);
 
         if (args != null && args.length > 0) {
-            conf.setNumWorkers(3);
+            conf.setNumWorkers(5);
 
             StormSubmitter.submitTopologyWithProgressBar(args[0], conf, builder.createTopology());
         } else {

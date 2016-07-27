@@ -39,7 +39,7 @@ public class CopyTableDataBolt extends BaseRichBolt {
 
     @Override
     public void execute(Tuple input) {
-        LOG.error("*****Thread" + Thread.currentThread().getName());
+        LOG.debug("*****Thread" + Thread.currentThread().getName());
         CopyTableDataRequest request = (CopyTableDataRequest) input.getValue(0);
         ConnectionInfo sourceConnectionInfo = new ConnectionInfo(request.getUsername(), request.getPassword(), request.getConnectionUrl());
         ConnectionInfo targetConnectionInfo = new ConnectionInfo(request.getTargetUsername(), request.getTargetPassword(), request.getTargetConnectionUrl());
@@ -49,9 +49,9 @@ public class CopyTableDataBolt extends BaseRichBolt {
         String idColumnName = request.getIdColumnName();
         long startId = request.getStartId();
         long endId = request.getEndId();
-        LOG.info("CopyTableDataBolt get request:" + request);
+        LOG.debug("CopyTableDataBolt get request:" + request);
         this.dao.save(request.setStatus(RequestStatusEnum.PROGRESSING));
-        LOG.info("CopyTableDataBolt PROGRESSING");
+        LOG.debug("CopyTableDataBolt PROGRESSING");
         try {
             TableUtil.migrateTableData(table, sourceSchema, sourceConnectionInfo, targetSchema, targetConnectionInfo,
                     idColumnName, startId, endId);
