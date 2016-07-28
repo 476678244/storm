@@ -59,6 +59,8 @@ public class CopyTableDataBolt extends BaseRichBolt {
             LOG.error(e);
         } catch (InterruptedException e) {
             LOG.error(e);
+        } catch (Exception e) {
+            LOG.error(e);
         }
         //
         this.collector.emit(new Values(request));

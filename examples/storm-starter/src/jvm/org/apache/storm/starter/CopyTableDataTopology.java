@@ -49,6 +49,7 @@ public class CopyTableDataTopology {
 
         Config conf = new Config();
         conf.setDebug(false);
+        //conf.setTopologyWorkerMaxHeapSize(2048);
 
         if (args != null && args.length > 0) {
             conf.setNumWorkers(5);

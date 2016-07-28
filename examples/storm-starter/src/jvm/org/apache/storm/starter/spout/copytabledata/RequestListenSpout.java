@@ -27,7 +27,7 @@ import java.util.Random;
  */
 public class RequestListenSpout extends BaseRichSpout {
 
-    public static int PARALLELISM = 20;
+    public static int PARALLELISM = 12;
 
     private static final Logger LOG = LoggerFactory.getLogger(RequestListenSpout.class);
 

@@ -203,11 +203,21 @@ public class TableUtil {
             log.error("exception caught when copying data of table:" + tableName);
             log.error(e);
         } finally {
-            queryResult.close();
-            pstmt.close();
-            prepStmnt.close();
-            targetConn.close();
-            sourceConn.close();
+            if (queryResult != null) {
+                queryResult.close();
+            }
+            if (pstmt != null) {
+                pstmt.close();
+            }
+            if (prepStmnt != null) {
+                prepStmnt.close();
+            }
+            if (targetConn != null) {
+                targetConn.close();
+            }
+            if (sourceConn != null) {
+                sourceConn.close();
+            }
         }
     }
 
